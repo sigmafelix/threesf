@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "numpy>=1.20"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "threesf"
+version = "0.2.0"
+authors = [
+    {name = "Insang Song", email = "geoissong@gmail.com"}
+]
+maintainers = [
+    {name = "Insang Song", email = "geoissong@gmail.com"}
+]
+description = "Lightweight 3D vector measures (ST_3DArea, ST_Volume, ST_3DDistance, ...) for Simple Features Z geometries"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.20"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: GIS",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.5", "plotly>=5.0"]
+shapely = ["shapely>=2.0"]
+test = ["pytest", "shapely>=2.0"]
+
+
+[project.urls]
+Homepage = "https://github.com/sigmafelix/threesf"
+Repository = "https://github.com/sigmafelix/threesf"
+"Bug Tracker" = "https://github.com/sigmafelix/threesf/issues"
+
+
+[tool.setuptools]
+packages = ["threesf"]
+include-package-data = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
