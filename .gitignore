@@ -1,0 +1,12 @@
+.DS_Store
+build/
+dist/
+*.o
+*.so
+*.dylib
+*.dll
+*.a
+*.egg-info/
+__pycache__/
+.pytest_cache/
+python/threesf/_native/

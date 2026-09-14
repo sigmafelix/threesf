@@ -1,0 +1,67 @@
+cmake_minimum_required(VERSION 3.15)
+project(threesf VERSION 0.2.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+option(THREESF_BUILD_TESTS "Build unit tests" ON)
+option(THREESF_BUILD_SHARED "Build shared library (C ABI)" ON)
+option(THREESF_BUILD_STATIC "Build static library (C ABI)" ON)
+
+# Header-only core
+add_library(threesf_core INTERFACE)
+target_include_directories(threesf_core INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(threesf_core INTERFACE cxx_std_17)
+add_library(threesf::core ALIAS threesf_core)
+
+if(THREESF_BUILD_SHARED)
+  add_library(threesf SHARED src/threesf_c.cpp)
+  target_link_libraries(threesf PUBLIC threesf_core)
+  target_compile_definitions(threesf PRIVATE THREESF_BUILDING)
+  set_target_properties(threesf PROPERTIES OUTPUT_NAME threesf VERSION ${PROJECT_VERSION} SOVERSION 0)
+  add_library(threesf::threesf ALIAS threesf)
+endif()
+if(THREESF_BUILD_STATIC)
+  add_library(threesf_static STATIC src/threesf_c.cpp)
+  target_link_libraries(threesf_static PUBLIC threesf_core)
+  target_compile_definitions(threesf_static PUBLIC THREESF_STATIC)
+  set_target_properties(threesf_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  add_library(threesf::static ALIAS threesf_static)
+endif()
+
+if(THREESF_BUILD_TESTS)
+  enable_testing()
+  foreach(t test_threesf test_io test_constructive)
+    add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/../tests/${t}.cpp src/threesf_c.cpp)
+    target_link_libraries(${t} PRIVATE threesf_core)
+    target_compile_definitions(${t} PRIVATE THREESF_STATIC)
+    if(MSVC)
+      target_compile_options(${t} PRIVATE /W4)
+    else()
+      target_compile_options(${t} PRIVATE -Wall -Wextra)
+    endif()
+    add_test(NAME ${t} COMMAND ${t})
+  endforeach()
+endif()
+
+include(GNUInstallDirs)
+install(DIRECTORY include/threesf DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+set(_targets threesf_core)
+if(THREESF_BUILD_SHARED)
+  list(APPEND _targets threesf)
+endif()
+if(THREESF_BUILD_STATIC)
+  list(APPEND _targets threesf_static)
+endif()
+install(TARGETS ${_targets} EXPORT threesfTargets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(EXPORT threesfTargets NAMESPACE threesf:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threesf)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(threesfConfigVersion.cmake COMPATIBILITY SameMajorVersion)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/threesfConfig.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/threesfTargets.cmake)\n")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/threesfConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/threesfConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/threesf)

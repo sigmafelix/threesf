@@ -1,0 +1,16 @@
+useDynLib(threesf, .registration = TRUE)
+export(st_geomfromtext, st_geomfromwkb, st_astext, st_asewkt, st_asbinary, st_asewkb, st_ashexewkb,
+       st_geometrytype, st_srid, st_setsrid, st_isempty, st_npoints, g3_from_sf, g3_to_sf,
+       g3_point, g3_multipoint, g3_linestring, g3_multilinestring, g3_polygon, g3_multipolygon,
+       g3_surface, g3_tin, g3_solid, g3_collection,
+       st_3dlength, st_3dperimeter, st_3darea, st_3darea_tessellated, st_volume, st_signed_volume,
+       st_3dcentroid, st_3dextent, st_isplanar, st_isclosed, st_issolid, st_orientation,
+       st_3ddistance, st_3dmaxdistance, st_3dshortestline, st_3dclosestpoint, st_3dlongestline,
+       st_3ddwithin, st_3ddfullywithin, st_3dintersects, st_tesselate, st_extrude, st_makesolid,
+       st_force_outward, st_forcepolygonccw, st_forcepolygoncw, threesf_version)
+S3method(print, threesf)
+
+export(st_selfintersects, st_3dconvexhull, st_3dintersection, st_3dunion, st_3ddifference)
+
+export(g3_plot)
+S3method(plot, threesf)
