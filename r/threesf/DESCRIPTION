@@ -1,7 +1,7 @@
 Package: threesf
 Type: Package
 Title: Lightweight 3D Vector Measures (Area, Volume, Length, Distance)
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: person("Insang", "Song", role = c("aut", "cre"), email = "geoissong@gmail.com")
 Description: Header-only C++17 implementation of PostGIS/SFCGAL-style 3D
     functions (ST_3DArea, ST_Volume, ST_3DLength, ST_3DDistance, ST_Tesselate,
@@ -17,3 +17,4 @@ Suggests: sf, testthat (>= 3.0.0), plotly
 Config/testthat/edition: 3
 URL: https://github.com/sigmafelix/threesf
 BugReports: https://github.com/sigmafelix/threesf/issues
+Config/roxygen2/version: 8.0.0
